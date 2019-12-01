@@ -36,12 +36,13 @@ x = (SCREEN_WIDTH - 40) / 2
 y = (SCREEN_HEIGHT - 40)
 speed = 5
 
-pygame.mixer.music.load('music/basic_song_01.mp3')
-pygame.mixer.music.play(0)
+#MUSIC FUNCTION
+#pygame.mixer.music.load('music/basic_song_01.mp3')
+#pygame.mixer.music.play(0)
 
-font = pygame.font.SysFont("Arial", 72)
-
-text = font.render("Title Screen of Doom!", True, (0, 128, 128))
+#TEXT FUNCTION
+#font = pygame.font.SysFont("Arial", 72)
+#text = font.render("Title Screen of Doom!", True, (0, 128, 128))
 
 while not done:
     
@@ -65,7 +66,7 @@ while not done:
         x += speed
 
     screen.fill((255, 255, 255))
-    screen.blit(get_image('ball.png'), (x, y))
-    screen.blit(text, (320 - text.get_width() // 2, 240 - text.get_height() // 2))
+    screen.blit(get_image('images\ship_shape.png'), (x, y))
+    #screen.blit(text, (320 - text.get_width() // 2, 240 - text.get_height() // 2))
     pygame.display.flip()
     clock.tick(60)
