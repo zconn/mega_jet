@@ -27,13 +27,15 @@ def play_sound (path):
 pygame.init()
 SCREEN_WIDTH = 640
 SCREEN_HEIGHT = 480
+SHIP_WIDTH = 32
+SHIP_HEIGHT = 32
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 done = False
 clock = pygame.time.Clock()
 
-x = (SCREEN_WIDTH - 40) / 2
-y = (SCREEN_HEIGHT - 40)
+x = (SCREEN_WIDTH - SHIP_WIDTH) / 2
+y = (SCREEN_HEIGHT - SHIP_HEIGHT)
 speed = 5
 
 #MUSIC FUNCTION
@@ -44,6 +46,25 @@ speed = 5
 #font = pygame.font.SysFont("Arial", 72)
 #text = font.render("Title Screen of Doom!", True, (0, 128, 128))
 
+def move_ship(position, speed, direction):
+    if direction == "up" and position != 0:
+        position = position - speed
+        if position < 0:
+            position = 0
+    if direction == "down" and position != SCREEN_HEIGHT - SHIP_HEIGHT:
+        position = position + speed
+        if position > SCREEN_HEIGHT - SHIP_HEIGHT:
+            position = SCREEN_HEIGHT - SHIP_HEIGHT
+    if direction == "left" and position != 0:
+        position = position - speed
+        if position < 0:
+            position = 0
+    if direction == "right" and position != SCREEN_WIDTH - SHIP_WIDTH:
+        position = position + speed
+        if position > SCREEN_WIDTH - SHIP_WIDTH:
+            position = SCREEN_WIDTH - SHIP_WIDTH
+    return position
+
 while not done:
     
     for event in pygame.event.get():
@@ -52,18 +73,18 @@ while not done:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             done = True
 
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-            play_sound("sound_effects/laser_shot_01.wav")
+        # if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+        #     play_sound("sound_effects/laser_shot_01.wav")
 
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_UP]:
-        y -= speed
+        y = move_ship(y, speed, "up") 
     if pressed[pygame.K_DOWN]:
-        y += speed
+        y = move_ship(y, speed, "down")
     if pressed[pygame.K_LEFT]:
-        x -= speed
+        x = move_ship(x, speed, "left")
     if pressed[pygame.K_RIGHT]:
-        x += speed
+        x = move_ship(x, speed, "right")
 
     screen.fill((255, 255, 255))
     screen.blit(get_image('images\ship_shape.png'), (x, y))
