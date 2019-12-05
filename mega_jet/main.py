@@ -7,7 +7,7 @@ def get_image(path):
     image = IMAGE_LIBRARY.get(path)
     if image == None:
         print(path)
-        extended_path = path
+        extended_path = os.path.normpath(path)
         image = pygame.image.load(extended_path)
         IMAGE_LIBRARY[path] = image
     return image
@@ -46,6 +46,9 @@ speed = 5
 #font = pygame.font.SysFont("Arial", 72)
 #text = font.render("Title Screen of Doom!", True, (0, 128, 128))
 
+#rendering stuff should go here
+bullets = []
+
 def move_ship(position, speed, direction):
     if direction == "up" and position != 0:
         position = position - speed
@@ -73,8 +76,9 @@ while not done:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             done = True
 
-        # if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-        #     play_sound("sound_effects/laser_shot_01.wav")
+    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+        play_sound("sound_effects/laser_shot_01.wav")
+        bullets.append([x + SHIP_WIDTH/2, y])
 
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_UP]:
@@ -86,8 +90,20 @@ while not done:
     if pressed[pygame.K_RIGHT]:
         x = move_ship(x, speed, "right")
 
-    screen.fill((255, 255, 255))
-    screen.blit(get_image('images\ship_shape.png'), (x, y))
+    #bullet handler, movement and removal at the end of the screen
+    for b in range(len(bullets)):
+        bullets[b][1] -= 10
+
+    for bullet in bullets[:]:
+        if bullet[1] < -10:
+            bullets.remove(bullet)
+
+    screen.fill((200, 200, 120))
+    screen.blit(get_image('images/ship_shape.png'), (x, y))
+    for bullet in bullets:
+        screen.blit(get_image('images/bullet-basic.png'), pygame.Rect(bullet[0], bullet[1], 0, 0))
     #screen.blit(text, (320 - text.get_width() // 2, 240 - text.get_height() // 2))
     pygame.display.flip()
     clock.tick(60)
+
+
