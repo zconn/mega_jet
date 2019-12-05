@@ -39,8 +39,8 @@ y = (SCREEN_HEIGHT - SHIP_HEIGHT)
 speed = 5
 
 #MUSIC FUNCTION
-#pygame.mixer.music.load('music/basic_song_01.mp3')
-#pygame.mixer.music.play(0)
+pygame.mixer.music.load('music/basic_song_01.mp3')
+pygame.mixer.music.play(0)
 
 #TEXT FUNCTION
 #font = pygame.font.SysFont("Arial", 72)
@@ -48,6 +48,7 @@ speed = 5
 
 #rendering stuff should go here
 bullets = []
+missiles = []
 
 def move_ship(position, speed, direction):
     if direction == "up" and position != 0:
@@ -76,9 +77,14 @@ while not done:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             done = True
 
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-        play_sound("sound_effects/laser_shot_01.wav")
-        bullets.append([x + SHIP_WIDTH/2, y])
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+            play_sound("sound_effects/laser_shot_01.wav")
+            bullets.append([x + SHIP_WIDTH/2, y])
+
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_LCTRL:
+            #TODO GET MISSILE SOUND
+            # play_sound("sound_effects/laser_shot_01.wav")
+            missiles.append([x + SHIP_WIDTH/2, y])
 
     pressed = pygame.key.get_pressed()
     if pressed[pygame.K_UP]:
@@ -94,14 +100,23 @@ while not done:
     for b in range(len(bullets)):
         bullets[b][1] -= 10
 
+    for b in range(len(missiles)):
+        missiles[b][1] -= 8
+
     for bullet in bullets[:]:
         if bullet[1] < -10:
             bullets.remove(bullet)
+
+    for missile in missiles[:]:
+        if missile[1] < -10:
+            missiles.remove(missile)
 
     screen.fill((200, 200, 120))
     screen.blit(get_image('images/ship_shape.png'), (x, y))
     for bullet in bullets:
         screen.blit(get_image('images/bullet-basic.png'), pygame.Rect(bullet[0], bullet[1], 0, 0))
+    for missile in missiles:
+        screen.blit(get_image('images/missile-basic.png'), pygame.Rect(missile[0], missile[1], 0, 0))
     #screen.blit(text, (320 - text.get_width() // 2, 240 - text.get_height() // 2))
     pygame.display.flip()
     clock.tick(60)
